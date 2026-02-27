@@ -12,11 +12,12 @@
 | **engine-debug** | Cocos Creator 引擎源码调试与问题定位（基于 `scripting/engine`） |
 | **config-type-definition** | 根据 JSON 配置和源码定义 TypeScript 配置类型 |
 | **source-code-reference** | 功能移植、实现与排查时优先参考源码（如 PuzzleBall 的 `game.js`） |
-| **laya-debugging** | LayaAir 引擎调试（基于 `bin/libs`） |
+| **laya-debugging** | LayaAir 引擎源码调试与问题定位（基于 `bin/libs`） |
 | **skill-creator** | 创建、维护 Agent Skill 的流程与规范 |
 | **refactor-func-click** | 将 Laya 点击事件重构为 `Func.AddClick` / `Func.RemoveClick` |
 | **json-to-xlsx** | 将 JSON 配置批量转换为 XLSX 表格 |
 | **laya-scene-generation** | 生成符合 LayaAir 规范的 `.scene` UI 配置文件 |
+| **puzzleball-config-doc** | 根据 game.js 分析 PuzzleBall JSON 配置的用途与使用逻辑，生成说明文档 |
 
 ---
 
@@ -33,6 +34,7 @@
 | **refactor-func-click** | `skills/refactor-func-click/` | 自动化重构 LayaAir TypeScript 文件，使其符合 `require-func-click` ESLint 规则。将 `Laya.Event.CLICK` / `MouseEvent.CLICK` 的 `.on` / `.once` / `.off` 替换为 `Func.AddClick` / `Func.RemoveClick`。 |
 | **json-to-xlsx** | `skills/json-to-xlsx/` | 将 JSON 配置文件批量转换为 XLSX 表格。支持 4 行表头（显示名、类型、字段名、格式提示），扁平化嵌套对象、序列化数组，需用户指定 JSON 目录路径。 |
 | **laya-scene-generation** | `skills/laya-scene-generation/` | 根据需求生成符合 LayaAir 规范的 `.scene` UI 配置文件。支持 View、Image、Button、List 等组件，需参考图与资源路径，遵循 compId、nodeParent、命名等规范，不写入 Script 组件。 |
+| **puzzleball-config-doc** | `skills/puzzleball-config-doc/` | 根据 game.js 源码分析 `bin/res/puzzleball/config` 中指定 JSON 配置的用途与使用逻辑，并生成说明文档。必须由用户指定要分析的 JSON 配置文件名（如 boxShop.json、stageA.json）。 |
 
 ---
 
@@ -46,6 +48,7 @@
 ### 配置与数据
 - **config-type-definition**：配置类型定义
 - **json-to-xlsx**：JSON 转 Excel
+- **puzzleball-config-doc**：PuzzleBall 配置说明文档生成
 
 ### 代码与工具
 - **source-code-reference**：源码参考优先
