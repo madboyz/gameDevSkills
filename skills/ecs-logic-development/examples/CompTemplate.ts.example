@@ -1,0 +1,50 @@
+/**
+ * 组件模板示例
+ * 将此文件复制到 assets/scripts/logic/ecs/comp/ 目录并重命名
+ */
+import { ecs } from "@framework/ecs/ECSCore";
+
+/**
+ * 组件命名规范：
+ * 1. 类名必须以 Comp 开头
+ * 2. 文件名与类名一致
+ * 3. 必须使用 @ecs.ECSClass 装饰器
+ */
+@ecs.ECSClass("CompExample")
+export class CompExample extends ecs.Comp {
+    // ==================== 属性定义 ====================
+    
+    /**
+     * 组件属性应当是纯数据
+     * 避免在组件中添加逻辑方法
+     */
+    public value: number = 0;
+    public name: string = "";
+    public isActive: boolean = false;
+    
+    // 可以使用 getter/setter 进行数据验证
+    private _health: number = 100;
+    public get health(): number {
+        return this._health;
+    }
+    public set health(v: number) {
+        this._health = Math.max(0, Math.min(v, this.maxHealth));
+    }
+    
+    public maxHealth: number = 100;
+    
+    // ==================== 必须实现的方法 ====================
+    
+    /**
+     * 重置组件状态
+     * 当组件从对象池中复用时会调用此方法
+     * 必须将所有属性重置为初始值
+     */
+    reset(): void {
+        this.value = 0;
+        this.name = "";
+        this.isActive = false;
+        this._health = 100;
+        this.maxHealth = 100;
+    }
+}

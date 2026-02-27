@@ -1,0 +1,129 @@
+/**
+ * 系统模板示例
+ * 将此文件复制到 assets/scripts/logic/ecs/system/ 目录并重命名
+ */
+import { ecs } from "@framework/ecs/ECSCore";
+
+/**
+ * 系统命名规范：
+ * 1. 类名必须以 Sys 开头
+ * 2. 文件名与类名一致
+ * 3. 必须使用 @ecs.ECSClass 装饰器
+ */
+@ecs.ECSClass("SysExample")
+export class SysExample extends ecs.System {
+    // ==================== 私有属性 ====================
+    
+    /** 数据中心引用（可用于存储共享数据） */
+    // private _dataCenter: DataCenterExample = null;
+    
+    /** 缓存的实体列表（可选，用于性能优化） */
+    private _cachedEntities: ecs.Entity[] = [];
+    
+    // ==================== 更新间隔控制 ====================
+    
+    /**
+     * 设置更新间隔（帧数）
+     * 默认为 1，表示每帧都更新
+     * 例如设置为 5，表示每 5 帧更新一次
+     */
+    // protected _updateInterval: number = 1;
+    
+    // ==================== 生命周期方法 ====================
+    
+    /**
+     * 系统启用时调用
+     * 用于初始化资源、获取数据中心引用等
+     */
+    enable(world: ecs.World): void {
+        super.enable(world);
+        
+        // 获取数据中心（如需要）
+        // this._dataCenter = world.getDataCenter<DataCenterExample>("DataCenterExample");
+        
+        // 初始化逻辑
+        console.log(`${this.sysName} 启用`);
+    }
+    
+    /**
+     * 系统禁用时调用
+     * 用于清理资源、解除引用等
+     */
+    disable(): void {
+        // 清理逻辑
+        this._cachedEntities.length = 0;
+        // this._dataCenter = null;
+        
+        console.log(`${this.sysName} 禁用`);
+        super.disable();
+    }
+    
+    // ==================== 实体回调 ====================
+    
+    /**
+     * 实体添加到 World 时调用
+     * 可用于初始化与该实体相关的资源
+     */
+    onEntityAdd(entity: ecs.Entity): void {
+        // 检查实体是否包含关心的组件
+        // const comp = entity.getComp<CompExample>("CompExample");
+        // if (comp) {
+        //     // 处理实体添加
+        // }
+    }
+    
+    /**
+     * 实体从 World 移除时调用
+     * 用于清理与该实体相关的资源
+     */
+    onEntityRemove(entity: ecs.Entity): void {
+        // 清理逻辑
+    }
+    
+    // ==================== 更新逻辑 ====================
+    
+    /**
+     * 每帧更新（受 _updateInterval 控制）
+     * @param dt 帧间隔（毫秒）
+     */
+    onUpdate(dt: number): void {
+        // 使用 filter 获取关心的实体
+        // filter 有帧级缓存，同帧多次调用相同条件不会重复计算
+        this._cachedEntities = this.curWorld.filter(["CompExample"]);
+        
+        for (const entity of this._cachedEntities) {
+            // const comp = entity.getComp<CompExample>("CompExample");
+            // 更新逻辑
+        }
+    }
+    
+    // ==================== 回收重置 ====================
+    
+    /**
+     * 回收时重置状态
+     * 当系统被回收到对象池时调用
+     */
+    reset(): void {
+        this._cachedEntities.length = 0;
+        // this._dataCenter = null;
+    }
+    
+    // ==================== 自动事件监听 ====================
+    
+    /**
+     * 以 EVENT_ECS 开头的方法会在 enable 时自动注册为事件监听器
+     * 在 disable 时自动注销
+     */
+    // EVENT_ECS_SOME_EVENT(param1: any, param2: any): void {
+    //     // 事件处理逻辑
+    // }
+    
+    // ==================== 自定义方法 ====================
+    
+    /**
+     * 派发事件给当前 World 的所有系统
+     */
+    // private notifySomething(): void {
+    //     this.dispatchEvent("EVENT_ECS_SOME_EVENT", arg1, arg2);
+    // }
+}

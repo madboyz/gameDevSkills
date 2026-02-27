@@ -1,0 +1,86 @@
+/**
+ * 数据中心模板示例
+ * 将此文件复制到 assets/scripts/logic/ecs/datacenter/ 目录并重命名
+ */
+import { ecs } from "@framework/ecs/ECSCore";
+import { Node } from "cc";
+
+/**
+ * 数据中心命名规范：
+ * 1. 类名建议以 DataCenter 开头
+ * 2. 文件名与类名一致
+ * 3. 必须使用 @ecs.ECSClass 装饰器
+ * 
+ * 数据中心用途：
+ * - 在 World 范围内共享数据
+ * - 存储配置、引用节点等
+ * - 不应包含复杂逻辑，只存储数据
+ */
+@ecs.ECSClass("DataCenterExample")
+export class DataCenterExample extends ecs.DataCenter {
+    // ==================== 共享数据 ====================
+    
+    /** 场景根节点引用 */
+    public rootNode: Node = null;
+    
+    /** 配置数据 */
+    public config: any = null;
+    
+    /** 游戏状态 */
+    public gameState: {
+        score: number;
+        level: number;
+        isPaused: boolean;
+    } = {
+        score: 0,
+        level: 1,
+        isPaused: false
+    };
+    
+    // ==================== 生命周期方法 ====================
+    
+    /**
+     * 初始化数据中心
+     * @param world 所属的 World 实例
+     * @param args 额外参数（由 addDataCenter 传入）
+     */
+    protected init(world: ecs.World, ...args: any[]): void {
+        super.init(world, ...args);
+        
+        // 从参数中获取初始化数据
+        if (args.length > 0) {
+            this.rootNode = args[0] as Node;
+        }
+        if (args.length > 1) {
+            this.config = args[1];
+        }
+    }
+    
+    /**
+     * 重置数据中心状态
+     * 当数据中心被回收到对象池时调用
+     */
+    reset(): void {
+        this.rootNode = null;
+        this.config = null;
+        this.gameState = {
+            score: 0,
+            level: 1,
+            isPaused: false
+        };
+    }
+    
+    // ==================== 便捷方法（可选） ====================
+    
+    /**
+     * 数据中心可以提供一些简单的数据访问方法
+     * 但不应包含复杂的业务逻辑
+     */
+    public addScore(value: number): void {
+        this.gameState.score += value;
+    }
+    
+    public nextLevel(): void {
+        this.gameState.level++;
+    }
+}
