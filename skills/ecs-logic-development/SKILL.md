@@ -319,19 +319,21 @@ const entities = world.filter(
 
 ### 4. 事件系统
 
-**自动事件注册**：System 中以 `EVENT_ECS` 开头的方法会在 `enable` 时自动注册，`disable` 时自动注销。
+**World 事件自动注册**：在处理方法上使用 **`@ecs.ECSEvent(eventName)`**，事件名为常量字符串（可与派发侧枚举一致），与方法名解耦。
 
 ```typescript
+import { ecs } from "@framework/ecs/ECSCore";
+import { ECSEvt } from "@logic/scene/event/ECSEvt";
+
 @ecs.ECSClass("SysHUD")
 export class SysHUD extends ecs.System {
-    // 自动注册为 "EVENT_ECS_PLAYER_LEVEL_UP" 事件监听器
-    EVENT_ECS_PLAYER_LEVEL_UP(newLevel: number): void {
-        console.log(`玩家升级到 ${newLevel} 级`);
+    @ecs.ECSEvent(ECSEvt.ECS_ADD_HUB)
+    onAddHub(payload: Array<{ uuid: string; hub: unknown }>): void {
+        // ...
     }
-    
-    // 在其他系统中派发事件
-    someMethod(): void {
-        this.dispatchEvent("EVENT_ECS_PLAYER_LEVEL_UP", 10);
+
+    someMethod(rows: Array<{ uuid: string; hub: unknown }>): void {
+        this.curWorld.event(ECSEvt.ECS_ADD_HUB, rows);
     }
 }
 ```

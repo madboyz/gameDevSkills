@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>__REPORT_TITLE__</title>
+<script src="../scripts/chart.umd.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; padding: 24px; }
+  h1 { font-size: 20px; font-weight: 700; color: #f8fafc; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #64748b; margin-bottom: 28px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; }
+  .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .stat-value { font-size: 22px; font-weight: 700; }
+  .stat-sub { font-size: 11px; color: #64748b; margin-top: 3px; }
+  .section-title { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .08em; margin: 24px 0 12px; border-left: 3px solid #f97316; padding-left: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .chart-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+  .chart-card.full { margin-bottom: 18px; }
+  .card-title { font-size: 13px; font-weight: 600; color: #f1f5f9; margin-bottom: 4px; }
+  .card-desc { font-size: 11px; color: #64748b; margin-bottom: 16px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #0f172a; color: #64748b; font-weight: 600; text-align: center; padding: 8px 10px; border-bottom: 1px solid #334155; font-size: 11px; text-transform: uppercase; }
+  td { padding: 8px 10px; text-align: center; border-bottom: 1px solid #1e293b; }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+  canvas { max-height: 280px; }
+  @media (max-width: 1100px) {
+    .grid-4, .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<h1>__REPORT_TITLE__</h1>
+<div class="subtitle">__REPORT_SUBTITLE__</div>
+<div class="grid-4" id="summaryGrid"></div>
+
+<div class="section-title">关键走势</div>
+<div class="chart-card full">
+  <div class="card-title" id="mainLineTitle"></div>
+  <div class="card-desc" id="mainLineDesc"></div>
+  <canvas id="mainLineChart"></canvas>
+</div>
+
+<div class="grid-2" id="secondaryCharts"></div>
+
+<div class="section-title">明细对比</div>
+<div class="chart-card full">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>对象</th>
+          <th>旧值</th>
+          <th>新值</th>
+          <th>变化</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const reportData = __REPORT_DATA__;
+const OLD = '#94a3b8';
+const NEW = '#f97316';
+const GRID = '#1e293b';
+const TEXT = '#e2e8f0';
+const MUTED = '#64748b';
+
+Chart.defaults.color = MUTED;
+Chart.defaults.borderColor = GRID;
+Chart.defaults.font.family = 'Segoe UI';
+
+function chartOptions() {
+  return {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { labels: { color: MUTED } },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: TEXT,
+        bodyColor: MUTED,
+        borderColor: '#334155',
+        borderWidth: 1
+      }
+    },
+    scales: {
+      x: { grid: { color: GRID }, ticks: { color: MUTED } },
+      y: { grid: { color: GRID }, ticks: { color: MUTED } }
+    }
+  };
+}
+
+function renderSummary() {
+  const grid = document.getElementById('summaryGrid');
+  grid.innerHTML = reportData.summary.map((item) => `
+    <div class="stat-card">
+      <div class="stat-label">${item.label}</div>
+      <div class="stat-value" style="color:${item.accent || NEW}">${item.value}</div>
+      <div class="stat-sub">${item.subvalue || ''}</div>
+    </div>
+  `).join('');
+}
+
+function buildLineChart(targetId, chart) {
+  return new Chart(document.getElementById(targetId), {
+    type: 'line',
+    data: {
+      labels: reportData.series.labels,
+      datasets: [
+        {
+          label: chart.baselineLabel || '旧值',
+          data: chart.baseline,
+          borderColor: OLD,
+          backgroundColor: 'rgba(148,163,184,0.08)',
+          fill: true,
+          tension: 0.35,
+          borderDash: [5, 4]
+        },
+        {
+          label: chart.candidateLabel || '新值',
+          data: chart.candidate,
+          borderColor: NEW,
+          backgroundColor: 'rgba(249,115,22,0.10)',
+          fill: true,
+          tension: 0.35
+        }
+      ]
+    },
+    options: chartOptions()
+  });
+}
+
+function buildBarChart(targetId, chart) {
+  return new Chart(document.getElementById(targetId), {
+    type: 'bar',
+    data: {
+      labels: reportData.series.labels,
+      datasets: [
+        {
+          label: chart.baselineLabel || '旧值',
+          data: chart.baseline,
+          backgroundColor: 'rgba(148,163,184,0.60)'
+        },
+        {
+          label: chart.candidateLabel || '新值',
+          data: chart.candidate,
+          backgroundColor: 'rgba(249,115,22,0.75)'
+        }
+      ]
+    },
+    options: chartOptions()
+  });
+}
+
+function renderCharts() {
+  const lineCharts = reportData.series.lineCharts || [];
+  const barCharts = reportData.series.barCharts || [];
+  const mainLine = lineCharts[0] || {
+    title: '主要趋势',
+    description: '',
+    baseline: [],
+    candidate: []
+  };
+
+  document.getElementById('mainLineTitle').textContent = mainLine.title || '主要趋势';
+  document.getElementById('mainLineDesc').textContent = mainLine.description || '';
+  buildLineChart('mainLineChart', mainLine);
+
+  const secondary = document.getElementById('secondaryCharts');
+  const extraCharts = [...lineCharts.slice(1).map((chart) => ({ type: 'line', chart })), ...barCharts.map((chart) => ({ type: 'bar', chart }))];
+  secondary.innerHTML = extraCharts.map((item, index) => `
+    <div class="chart-card">
+      <div class="card-title">${item.chart.title}</div>
+      <div class="card-desc">${item.chart.description || ''}</div>
+      <canvas id="secondaryChart${index}"></canvas>
+    </div>
+  `).join('');
+
+  extraCharts.forEach((item, index) => {
+    if (item.type === 'line') {
+      buildLineChart(`secondaryChart${index}`, item.chart);
+    } else {
+      buildBarChart(`secondaryChart${index}`, item.chart);
+    }
+  });
+}
+
+function renderRows() {
+  const body = document.getElementById('tableBody');
+  body.innerHTML = reportData.rows.map((row) => `
+    <tr>
+      <td>${row.name}</td>
+      <td>${row.baseline}</td>
+      <td>${row.candidate}</td>
+      <td>${row.delta}</td>
+      <td>${row.note || ''}</td>
+    </tr>
+  `).join('');
+}
+
+renderSummary();
+renderCharts();
+renderRows();
+</script>
+</body>
+</html>
