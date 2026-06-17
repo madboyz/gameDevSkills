@@ -1,0 +1,7 @@
+interface:
+  display_name: "FGUI UI Config Generation"
+  short_description: "Generate FairyGUI XML for UiProject"
+  default_prompt: "Use $fgui-ui-config-generation to generate or convert a FairyGUI UI configuration for this UiProject."
+
+policy:
+  allow_implicit_invocation: true
