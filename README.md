@@ -2,7 +2,7 @@
 
 游戏开发所用的 **Skills** 与 **Rules** 集合。
 
-- **Skills**（`skills/`）：17 个专项技能，提供特定任务的工作流与脚本
+- **Skills**（`skills/`）：18 个专项技能，提供特定任务的工作流与脚本
 - **Rules**（`rules/`）：7 条 Agent 规则，定义项目约束与协作规范
 
 ---
@@ -23,6 +23,7 @@
 | **karpathy-guidelines** | LLM 编码行为准则，避免过度设计、做最小改动、明确假设与验收标准 |
 | **class-templet** | 快速创建符合项目规范的 UI 界面、弹窗、组件 TypeScript 类模板 |
 | **laya-scene-generation** | 生成符合 LayaAir 规范的 `.scene` UI 配置文件 |
+| **fgui-ui-config-generation** | 生成 FairyGUI UI XML 配置与 `package.xml` 资源注册（支持设计图、Laya `.scene` 转换） |
 | **atlas-packer** | 将小图 `.jpg` 拼合为 `.png` 图集，并生成 `atlas_map.json` 映射 |
 | **logic-req-doc** | 根据策划 docx、配置表、协议生成前后端职责清晰的逻辑需求文档 |
 | **dev-plan-tracker** | 维护开发计划与交接记录，按模块写入 `doc/plan/` |
@@ -47,6 +48,7 @@
 | **karpathy-guidelines** | `skills/karpathy-guidelines/` | 减少 LLM 常见编码失误的行为准则。编写、审查或重构代码时使用：先明确假设、保持简单、做最小改动、只清理自己引入的冗余，并定义可验证的验收标准。 |
 | **class-templet** | `skills/class-templet/` | 快速创建符合项目规范的 UI 类模板。支持 UILayer 全屏/半屏界面、UITips 弹窗、Component 列表项/页签等，自动生成命名、目录结构和继承关系正确的 TypeScript 代码。 |
 | **laya-scene-generation** | `skills/laya-scene-generation/` | 根据需求生成符合 LayaAir 规范的 `.scene` UI 配置文件。支持 View、Image、Button、List 等组件，需参考图与资源路径，遵循 compId、nodeParent、命名等规范，不写入 Script 组件。 |
+| **fgui-ui-config-generation** | `skills/fgui-ui-config-generation/` | 在 UiProject 中生成或更新 FairyGUI UI XML 配置与 `package.xml` 资源注册。支持从设计图、Laya `.scene` 创建界面，使用 GLoader 绑定图片资源，以 Controller 表达视觉状态差异，并遵循包目录（`_view`/`tex`/`txt`/`ui`）、ID/URL 与公共组件引用规范。 |
 | **atlas-packer** | `skills/atlas-packer/` | 将目录下的小 `.jpg` 图块按 shelf 算法拼合为一个或多个 `.png` 图集，并生成 `atlas_map.json` 记录文件名与坐标映射。支持自定义最大尺寸（推荐 2048）。 |
 | **logic-req-doc** | `skills/logic-req-doc/` | 根据策划 `.docx`、配置表（AllFilenamePara.d.ts / tb.d.tstype）、参考代码与 netdata 协议（PB*.ts / *.proto），生成含读表伪逻辑、协议时序、前后端职责划分的详细逻辑需求文档。 |
 | **dev-plan-tracker** | `skills/dev-plan-tracker/` | 维护本项目开发计划与交接记录。修改代码、实现功能、修复 bug 或重构时，按主修改模块在 `doc/plan/` 下新建计划文件，记录目标、已完成、缺失、验证结果和后续入口。 |
@@ -71,6 +73,7 @@
 ### UI 与界面
 - **class-templet**：UI 类模板生成
 - **laya-scene-generation**：Laya 场景文件生成
+- **fgui-ui-config-generation**：FGUI UI XML 配置生成
 - **atlas-packer**：图集打包
 
 ### 代码与开发
