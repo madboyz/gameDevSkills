@@ -26,7 +26,7 @@
 | **fgui-ui-config-generation** | 生成 FairyGUI UI XML 配置与 `package.xml` 资源注册（支持设计图、Laya `.scene` 转换） |
 | **atlas-packer** | 将小图 `.jpg` 拼合为 `.png` 图集，并生成 `atlas_map.json` 映射 |
 | **logic-req-doc** | 根据策划 docx、配置表、协议生成前后端职责清晰的逻辑需求文档 |
-| **dev-plan-tracker** | 维护开发计划与交接记录，按模块写入 `doc/plan/` |
+| **dev-plan-tracker** | 按业务模块维护 `doc/plan/` 计划，在模块计划内追加任务节并同步待办总览 |
 | **hybrid-cloud-revision** | 本地上下文 + 云端推理的混合文档修订（xlsx、docx、md 等） |
 | **skill-creator** | 创建、维护 Agent Skill 的流程与规范 |
 
@@ -51,7 +51,7 @@
 | **fgui-ui-config-generation** | `skills/fgui-ui-config-generation/` | 在 UiProject 中生成或更新 FairyGUI UI XML 配置与 `package.xml` 资源注册。支持从设计图、Laya `.scene` 创建界面，使用 GLoader 绑定图片资源，以 Controller 表达视觉状态差异，并遵循包目录（`_view`/`tex`/`txt`/`ui`）、ID/URL 与公共组件引用规范。 |
 | **atlas-packer** | `skills/atlas-packer/` | 将目录下的小 `.jpg` 图块按 shelf 算法拼合为一个或多个 `.png` 图集，并生成 `atlas_map.json` 记录文件名与坐标映射。支持自定义最大尺寸（推荐 2048）。 |
 | **logic-req-doc** | `skills/logic-req-doc/` | 根据策划 `.docx`、配置表（AllFilenamePara.d.ts / tb.d.tstype）、参考代码与 netdata 协议（PB*.ts / *.proto），生成含读表伪逻辑、协议时序、前后端职责划分的详细逻辑需求文档。 |
-| **dev-plan-tracker** | `skills/dev-plan-tracker/` | 维护本项目开发计划与交接记录。修改代码、实现功能、修复 bug 或重构时，按主修改模块在 `doc/plan/` 下新建计划文件，记录目标、已完成、缺失、验证结果和后续入口。 |
+| **dev-plan-tracker** | `skills/dev-plan-tracker/` | 维护本项目开发计划与交接记录。修改代码、实现功能、修复 bug、补齐功能、重构、调整接口或同步文档时，按主修改模块路径定位 `doc/plan/<模块分类>/` 下的模块计划（默认 `模块计划.md`），在「任务记录」追加任务节并更新「待办总览」，记录目标、已完成、缺失、验证与接手建议；`scene/map` 等子模块有专门文件映射，不再每次任务新建独立计划文件，且不替代 `doc/` 专题设计文档。 |
 | **hybrid-cloud-revision** | `skills/hybrid-cloud-revision/` | 本地-云端混合文档修订。本地完成索引与摘要后，将最小必要数据包发送云端进行跨文件一致性修订、政策/业务措辞改写或最终定稿，再回写本地并复核。 |
 | **skill-creator** | `skills/skill-creator/` | 创建与维护 Agent Skill 的指南。包含技能结构（SKILL.md、scripts、references、assets）、渐进式披露设计、创建流程（理解需求 → 规划资源 → 初始化 → 编辑 → 打包 → 迭代），以及 init_skill.py、package_skill.py 等脚本用法。 |
 
@@ -83,7 +83,7 @@
 
 ### 文档与计划
 - **logic-req-doc**：逻辑需求文档生成
-- **dev-plan-tracker**：开发计划与交接记录
+- **dev-plan-tracker**：模块计划与任务交接记录
 - **hybrid-cloud-revision**：本地-云端混合文档修订
 
 ### 技能管理
